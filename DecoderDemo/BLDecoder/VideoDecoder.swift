@@ -119,7 +119,7 @@ class VideoDecoder {
         defer {
             objc_sync_exit(self)
             let endTime = CFAbsoluteTimeGetCurrent()
-            print("🦁 decode time: \(targetTime) | cost: \((endTime - startTime) * 1000)ms")
+            print("🦁 VideoDecoder decode cost: \((endTime - startTime) * 1000)ms")
         }
         
         // 是否是在往前(往右)滑动 - 倒着滑动

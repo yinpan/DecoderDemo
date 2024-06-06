@@ -20,8 +20,8 @@
 		B0BE19332C0EE0C00027C1E8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0BE19312C0EE0C00027C1E8 /* Main.storyboard */; };
 		B0BE19352C0EE0C10027C1E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B0BE19342C0EE0C10027C1E8 /* Assets.xcassets */; };
 		B0BE19382C0EE0C10027C1E8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0BE19362C0EE0C10027C1E8 /* LaunchScreen.storyboard */; };
-		B0BE19CB2C0EF0BC0027C1E8 /* sample.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B0BE19CA2C0EF0BC0027C1E8 /* sample.mp4 */; };
-		B0BE19CE2C0EF7E90027C1E8 /* sample_h265.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B0BE19CD2C0EF7E90027C1E8 /* sample_h265.mp4 */; };
+		B0BE19CB2C0EF0BC0027C1E8 /* sample_cartoon_h264mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B0BE19CA2C0EF0BC0027C1E8 /* sample_cartoon_h264mp4 */; };
+		B0BE19CE2C0EF7E90027C1E8 /* sample_cartoon_h265.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B0BE19CD2C0EF7E90027C1E8 /* sample_cartoon_h265.mp4 */; };
 		B0BE1A5D2C0EFC6E0027C1E8 /* libavfilter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0BE1A552C0EFC6E0027C1E8 /* libavfilter.a */; };
 		B0BE1A5E2C0EFC6E0027C1E8 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0BE1A562C0EFC6E0027C1E8 /* libavformat.a */; };
 		B0BE1A5F2C0EFC6E0027C1E8 /* libpostproc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0BE1A572C0EFC6E0027C1E8 /* libpostproc.a */; };
@@ -67,8 +67,8 @@
 		B0BE19C12C0EE11B0027C1E8 /* DecoderDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DecoderDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		B0BE19C22C0EE11C0027C1E8 /* VTDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VTDecoder.h; sourceTree = "<group>"; };
 		B0BE19C32C0EE11C0027C1E8 /* VTDecoder.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = VTDecoder.mm; sourceTree = "<group>"; };
-		B0BE19CA2C0EF0BC0027C1E8 /* sample.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample.mp4; sourceTree = "<group>"; };
-		B0BE19CD2C0EF7E90027C1E8 /* sample_h265.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample_h265.mp4; sourceTree = "<group>"; };
+		B0BE19CA2C0EF0BC0027C1E8 /* sample_cartoon_h264mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample_cartoon_h264mp4; sourceTree = "<group>"; };
+		B0BE19CD2C0EF7E90027C1E8 /* sample_cartoon_h265.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sample_cartoon_h265.mp4; sourceTree = "<group>"; };
 		B0BE1A552C0EFC6E0027C1E8 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavfilter.a; sourceTree = "<group>"; };
 		B0BE1A562C0EFC6E0027C1E8 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavformat.a; sourceTree = "<group>"; };
 		B0BE1A572C0EFC6E0027C1E8 /* libpostproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpostproc.a; sourceTree = "<group>"; };
@@ -382,8 +382,8 @@
 				B0BE1AFC2C100FAE0027C1E8 /* sample_1920x1080_h264.mp4 */,
 				B0BE1AFD2C100FAE0027C1E8 /* sample_1920x1080_h265.mp4 */,
 				B0BE1AFE2C100FAE0027C1E8 /* sample_1920x1080_h266.mp4 */,
-				B0BE19CD2C0EF7E90027C1E8 /* sample_h265.mp4 */,
-				B0BE19CA2C0EF0BC0027C1E8 /* sample.mp4 */,
+				B0BE19CD2C0EF7E90027C1E8 /* sample_cartoon_h265.mp4 */,
+				B0BE19CA2C0EF0BC0027C1E8 /* sample_cartoon_h264mp4 */,
 			);
 			path = Asset;
 			sourceTree = "<group>";
@@ -690,9 +690,9 @@
 				B0BE1B002C100FAE0027C1E8 /* sample_1920x1080_h265.mp4 in Resources */,
 				B0BE19352C0EE0C10027C1E8 /* Assets.xcassets in Resources */,
 				B0BE19332C0EE0C00027C1E8 /* Main.storyboard in Resources */,
-				B0BE19CE2C0EF7E90027C1E8 /* sample_h265.mp4 in Resources */,
+				B0BE19CE2C0EF7E90027C1E8 /* sample_cartoon_h265.mp4 in Resources */,
 				B0BE1AFF2C100FAE0027C1E8 /* sample_1920x1080_h264.mp4 in Resources */,
-				B0BE19CB2C0EF0BC0027C1E8 /* sample.mp4 in Resources */,
+				B0BE19CB2C0EF0BC0027C1E8 /* sample_cartoon_h264mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
