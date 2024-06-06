@@ -212,9 +212,13 @@ static enum AVPixelFormat hw_pix_fmt = AV_PIX_FMT_VIDEOTOOLBOX;
                                    &videoInfo);
     
     // Create CMVideoFormatDescription
+    CFAbsoluteTime begin = CFAbsoluteTimeGetCurrent();
     avcodec_send_packet(codecCtx, &packet);
     while (0 == avcodec_receive_frame(codecCtx, videoFrame))
     {
+        CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
+        NSLogDebug(@"🤖 avcodec_send_packet cost: %.3lf ms", (end - begin) * 1000);
+        begin = CFAbsoluteTimeGetCurrent();
         // 将解码后的帧转换为 BGRA 格式
 //        sws_scale(swsCtx, videoFrame->data, videoFrame->linesize, 0, codecCtx->height, bgraFrame->data, bgraFrame->linesize);
         

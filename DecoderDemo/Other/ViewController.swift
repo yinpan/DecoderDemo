@@ -7,11 +7,21 @@
 
 import UIKit
 
-enum DecoderType: Int {
+enum DecoderType: Int, CustomStringConvertible {
+    
     case VideoToolBox
     case FFmpegHardware
     case FFmpegSoftware
     case AVFoundation
+    
+    var description: String {
+        switch self {
+        case .VideoToolBox: return "VideoToolBox"
+        case .FFmpegHardware: return "FFmpegHardware"
+        case .FFmpegSoftware: return "FFmpegSoftware"
+        case .AVFoundation: return "AVFoundation"
+        }
+    }
 }
 
 class ViewController: UIViewController {
@@ -64,10 +74,10 @@ class ViewController: UIViewController {
         let isH264 = formatSegmentControl.selectedSegmentIndex == 0
         let fileName = if isH264 {
             "sample_1920x1080_h264.mp4"
+//            "sample_cartoon_h264.mp4"
         } else {
-            "sample_h265.mp4"
+            "sample_cartoon_h265.mp4"
 //            "sample_1920x1080_h265.mp4"
-//            "testh265.MOV"
         }
         return Bundle.main.path(forResource: fileName, ofType: nil)
     }
@@ -143,12 +153,16 @@ class ViewController: UIViewController {
         guard prepareDecoder(filePath: filePath, format: self.formatReader) else {
             return
         }
-        formatReader?.readPacket { data, isFinish in
-            guard !isFinish else { return }
+        var beginTime = CFAbsoluteTimeGetCurrent()
+        formatReader?.readPacket { [weak self] data, isFinish in
+            guard !isFinish, let self else { return }
             guard let data = data else { return }
             decompressFrame(data: data)
+            let end = CFAbsoluteTimeGetCurrent()
+            print("🦁 [\(self.decoderType)] decode cost: \((end - beginTime) * 1000) ms")
+            Thread.sleep(forTimeInterval: 0.1)
+            beginTime = CFAbsoluteTimeGetCurrent()
         }
-        
     }
     
     private func formatTime(time: Double) -> String {

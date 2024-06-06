@@ -207,7 +207,10 @@
                 break;
             }
             
+            CFAbsoluteTime begin = CFAbsoluteTimeGetCurrent();
             int size = av_read_frame(self.formatContext, &packet);
+            CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
+            NSLogDebug(@"🤖 av_read_frame cost: %.3lf ms", (end - begin) * 1000);
             if (size < 0 || packet.size < 0)
             {
                 BLParseVideoDataInfo *dataPtr = nil;
@@ -242,7 +245,7 @@
                     }
                 }
                 
-                if (videoInfo.videoRotate != 0 /* &&  <= iPhone 8*/)
+                if (videoInfo.videoRotate != 0)
                 {
                     NSLogError(@"Not support the angle");
                     break;
@@ -268,16 +271,6 @@
                     break;
                 }
                 
-                /* new API can't get correct sps, pps.
-                 if (!self->m_bsfContext) {
-                 const AVBitStreamFilter *filter = av_bsf_get_by_name(filter_name);
-                 av_bsf_alloc(filter, &self->m_bsfContext);
-                 av_bsf_init(self->m_bsfContext);
-                 avcodec_parameters_copy(self->m_bsfContext->par_in, formatContext->streams[videoStreamIndex]->codecpar);
-                 }
-                 */
-                
-                // get sps,pps. If not call it, get sps , pps is incorrect. use new_packet to resolve memory leak.
                 AVPacket new_packet = packet;
                 if (self.bitFilterContext == NULL)
                 {
