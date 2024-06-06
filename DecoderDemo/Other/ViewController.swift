@@ -96,7 +96,7 @@ class ViewController: UIViewController {
                         self.previewView.display(sampleBuffer: buffer)
                     }
                     time += 1.0 / 30.0
-                    Thread.sleep(forTimeInterval: 0.01)
+                    Thread.sleep(forTimeInterval: 0.02)
                 }
             }
         } else {
@@ -160,7 +160,7 @@ class ViewController: UIViewController {
             decompressFrame(data: data)
             let end = CFAbsoluteTimeGetCurrent()
             print("🦁 [\(self.decoderType)] decode cost: \((end - beginTime) * 1000) ms")
-            Thread.sleep(forTimeInterval: 0.1)
+            Thread.sleep(forTimeInterval: 0.02)
             beginTime = CFAbsoluteTimeGetCurrent()
         }
     }
