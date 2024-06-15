@@ -17,7 +17,7 @@ class VideoDecoder {
     /// 视频解码相关属性
     private var asset: AVAsset?
     private var videoTrack: AVAssetTrack?
-    private var videoOriginalFPS: CGFloat
+    private(set) var videoOriginalFPS: CGFloat
 
     private var reader: AVAssetReader?
     private var videoTrackOutput: AVAssetReaderTrackOutput?
@@ -42,6 +42,8 @@ class VideoDecoder {
     private var identifier: String
     
     private var uri: String
+    
+    private var cache = MediaMetaCache()
         
     /// 一帧的时长
     let oneFrameTime: Double
@@ -56,7 +58,7 @@ class VideoDecoder {
     var outputSize: CGSize = .zero
     
     var meta: MediaMeta? {
-        return MediaMetaCache.shared.meta(for: uri, isVideo: true)
+        return cache.meta(for: uri, isVideo: true)
     }
     
     // MARK: Initialized Method
@@ -64,7 +66,7 @@ class VideoDecoder {
         self.uri = uri
         identifier = key
         oneFrameTime = 1.0 / CGFloat(30)
-        if let meta = MediaMetaCache.shared.meta(for: uri, isVideo: true) {
+        if let meta = cache.meta(for: uri, isVideo: true) {
             asset = meta.videoAsset
             videoTrack = meta.videoTrack
             let nominalFrameRate = CGFloat(videoTrack?.nominalFrameRate ?? 0)
@@ -184,9 +186,12 @@ class VideoDecoder {
         }
         
         while reader.status == .reading && track.nominalFrameRate > 0 {
+            let beginTime = CFAbsoluteTimeGetCurrent()
             guard let buffer = output.copyNextSampleBuffer() else {
                 break
             }
+            let endTime = CFAbsoluteTimeGetCurrent()
+            print("🦁🟢 AVAssetReader copyNextSampleBuffer cost: \((endTime - beginTime) * 1000) ms")
             let curSampleTime = CMSampleBufferGetOutputPresentationTimeStamp(buffer)
             if CMTIME_IS_INVALID(curSampleTime) {
                 continue
@@ -218,10 +223,15 @@ class VideoDecoder {
 }
 
 // MARK: - Private Methods
-private extension VideoDecoder {
+extension VideoDecoder {
     
     /// 根据需要重新创建AVAssetReader
     func createNewReader(_ startTime: Double) {
+        let beginTime = CFAbsoluteTimeGetCurrent()
+        defer {
+            let end = CFAbsoluteTimeGetCurrent()
+            print("🦁 createNewMeta 创建解码器耗时 cost: \((end - beginTime) * 1000) ms")
+        }
         resetEnv()
         guard let asset = asset else {
             return
@@ -286,7 +296,7 @@ private extension VideoDecoder {
             self.videoTrack = meta.videoTrack
         }*/
         if self.asset?.isReadable == false,
-           let meta = MediaMetaCache.shared.createNewMeta(self.uri, isVideo: true) {
+           let meta = cache.createNewMeta(self.uri, isVideo: true) {
             self.asset = meta.videoAsset
             self.videoTrack = meta.videoTrack
         }
@@ -321,6 +331,11 @@ extension AVAsset {
     
     @discardableResult
     func syncLoadTracks() -> NSError? {
+        let beginTime = CFAbsoluteTimeGetCurrent()
+        defer {
+            let end = CFAbsoluteTimeGetCurrent()
+            print("🦁 syncLoadTracks cost: \((end - beginTime) * 1000) ms")
+        }
         let trackKey = "tracks"
         let sema = DispatchSemaphore(value: 0)
         var error: NSError?

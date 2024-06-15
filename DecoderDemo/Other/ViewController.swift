@@ -73,6 +73,8 @@ class ViewController: UIViewController {
     private func getVideoPath() -> String? {
         let isH264 = formatSegmentControl.selectedSegmentIndex == 0
         let fileName = if isH264 {
+//            "number_h264.MP4"
+//            "testh264.MP4"
             "sample_1920x1080_h264.mp4"
 //            "sample_cartoon_h264.mp4"
         } else {
@@ -88,15 +90,22 @@ class ViewController: UIViewController {
             guard let filePath = getVideoPath() else {
                 return
             }
+            var beginTime = CFAbsoluteTimeGetCurrent()
             self.bl_decoder = VideoDecoder(uri: filePath, key: filePath)
+            let end = CFAbsoluteTimeGetCurrent()
+            print("🦁 [\(self.decoderType)] 创建解码器耗时 cost: \((end - beginTime) * 1000) ms")
             DispatchQueue.global(qos: .userInteractive).async {
                 var time: CGFloat = 0
+                beginTime = CFAbsoluteTimeGetCurrent()
                 while let buffer = self.bl_decoder?.decode(time) {
+                    let end = CFAbsoluteTimeGetCurrent()
+                    print("🦁🦁 [\(self.decoderType)] decode frame total cost: \((end - beginTime) * 1000) ms")
                     DispatchQueue.main.async {
                         self.previewView.display(sampleBuffer: buffer)
                     }
-                    time += 1.0 / 30.0
-                    Thread.sleep(forTimeInterval: 0.02)
+                    time += 1.0 / (self.bl_decoder?.videoOriginalFPS ?? 30.0)
+//                    Thread.sleep(forTimeInterval: 0.02)
+                    beginTime = CFAbsoluteTimeGetCurrent()
                 }
             }
         } else {
@@ -122,7 +131,8 @@ class ViewController: UIViewController {
                 self.ff_decoder = FFDecoder(formatContext: formatContext, decodeType: .software, videoStreamIndex: format.videoStreamIndex)
                 self.ff_decoder?.delegate = self
             case .AVFoundation:
-                break
+                // 实例解码器
+                self.bl_decoder?.createNewReader(0)
             }
             return true
         }
@@ -149,18 +159,27 @@ class ViewController: UIViewController {
         guard let filePath = getVideoPath() else {
             return
         }
+        var beginTime = CFAbsoluteTimeGetCurrent()
         self.formatReader = AVFormatReader(path: filePath)
+        var end = CFAbsoluteTimeGetCurrent()
+        print("🦁 [\(self.decoderType)] 环节 - 创建Reader - 读取轨道信息 cost: \((end - beginTime) * 1000) ms")
+        let beginTime1 = CFAbsoluteTimeGetCurrent()
         guard prepareDecoder(filePath: filePath, format: self.formatReader) else {
             return
         }
-        var beginTime = CFAbsoluteTimeGetCurrent()
+        end = CFAbsoluteTimeGetCurrent()
+        print("🦁 [\(self.decoderType)] 环节 - 创建解码器 cost: \((end - beginTime1) * 1000) ms")
+        print("🦁 [\(self.decoderType)] 创建解码器总耗时 cost: \((end - beginTime) * 1000) ms")
+        beginTime = CFAbsoluteTimeGetCurrent()
         formatReader?.readPacket { [weak self] data, isFinish in
             guard !isFinish, let self else { return }
             guard let data = data else { return }
+            let b1 = CFAbsoluteTimeGetCurrent()
             decompressFrame(data: data)
             let end = CFAbsoluteTimeGetCurrent()
-            print("🦁 [\(self.decoderType)] decode cost: \((end - beginTime) * 1000) ms")
-            Thread.sleep(forTimeInterval: 0.02)
+            print("🦁 [\(self.decoderType)] decode packet cost: \((end - b1) * 1000) ms")
+            print("🦁🦁 [\(self.decoderType)] decode frame total cost: \((end - beginTime) * 1000) ms")
+//            Thread.sleep(forTimeInterval: 0.02)
             beginTime = CFAbsoluteTimeGetCurrent()
         }
     }
@@ -192,12 +211,14 @@ class ViewController: UIViewController {
 extension ViewController: VideoDecoderDelegate, FFVideoDecoderDelegate {
     
     func getVideoDecodeDataCallback(_ sampleBuffer: CMSampleBuffer, isFirstFrame: Bool) {
+        print("🦁 VTDecode Finish.")
         DispatchQueue.main.async {
             self.previewView.display(sampleBuffer: sampleBuffer)
         }
     }
     
     func getDecodeVideoData(byFFmpeg sampleBuffer: CMSampleBuffer) {
+        print("🦁 ffmpeg Finish.")
         DispatchQueue.main.async {
             self.previewView.display(sampleBuffer: sampleBuffer)
         }

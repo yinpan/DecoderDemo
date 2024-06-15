@@ -19,6 +19,7 @@
     int     m_videoStreamIndex;
     BOOL    m_isFindIDR;
     int64_t m_base_time;
+    CFAbsoluteTime beginDecodeTime;
 }
 
 @end
@@ -83,6 +84,9 @@ static int DecodeGetAVStreamFPSTimeBase(AVStream *st) {
 
 #pragma mark - Public
 - (void)startDecodeVideoDataWithAVPacket:(AVPacket)packet {
+    if (beginDecodeTime == 0) {
+        beginDecodeTime = CFAbsoluteTimeGetCurrent();
+    }
     if (packet.flags == 1 && m_isFindIDR == NO) {
         m_isFindIDR = YES;
         m_base_time =  m_videoFrame->pts;
@@ -94,6 +98,8 @@ static int DecodeGetAVStreamFPSTimeBase(AVStream *st) {
                                      baseFrame:m_videoFrame
                                       baseTime:m_base_time
                               videoStreamIndex:m_videoStreamIndex];
+    } else {
+        NSLogDebug(@"🤖 非IDR");
     }
 }
 
@@ -214,10 +220,30 @@ static enum AVPixelFormat hw_pix_fmt = AV_PIX_FMT_VIDEOTOOLBOX;
     // Create CMVideoFormatDescription
     CFAbsoluteTime begin = CFAbsoluteTimeGetCurrent();
     avcodec_send_packet(codecCtx, &packet);
-    while (0 == avcodec_receive_frame(codecCtx, videoFrame))
+    while (true)
     {
+        int ret = avcodec_receive_frame(codecCtx, videoFrame);
         CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
         NSLogDebug(@"🤖 avcodec_send_packet cost: %.3lf ms", (end - begin) * 1000);
+        if (ret != 0) {
+            if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+            {
+                // 需要更多数据，或者解码器已经完成解码
+                NSLogDebug(@"🤖 需要更多数据，或者解码器已经完成解码");
+                break;
+            } else if (ret < 0) {
+                NSLogError(@"Error during decoding: ret = %d", ret);
+                return;
+            } else {
+                NSLogDebug(@"🤖 decoding的其他情况: ret = %d", ret);
+            }
+        }
+        if (beginDecodeTime > 0) {
+            CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
+            NSLogDebug(@"🤖 解码首帧的画面耗时 cost: %.3lf ms", (end - beginDecodeTime) * 1000);
+            beginDecodeTime = -1;
+        }
+        end = CFAbsoluteTimeGetCurrent();
         begin = CFAbsoluteTimeGetCurrent();
         // 将解码后的帧转换为 BGRA 格式
 //        sws_scale(swsCtx, videoFrame->data, videoFrame->linesize, 0, codecCtx->height, bgraFrame->data, bgraFrame->linesize);
@@ -248,20 +274,19 @@ static enum AVPixelFormat hw_pix_fmt = AV_PIX_FMT_VIDEOTOOLBOX;
         } else {
             NSLogDebug(@"Unknown pixel format: %d\n", pix_fmt);
         }
-        
+        CMTime presentationTimeStamp = CMTimeMake(videoFrame->pts, videoStream->time_base.den);
         CMSampleBufferRef sampleBufferRef = NULL;
         if (pix_fmt == AV_PIX_FMT_VIDEOTOOLBOX)
         {
             CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)videoFrame->data[3];
-            CMTime presentationTimeStamp = kCMTimeInvalid;
+            
             int64_t originPTS = videoFrame->pts;
             int64_t newPTS    = originPTS - baseTime;
-            presentationTimeStamp = CMTimeMakeWithSeconds(current_timestamp + newPTS * av_q2d(videoStream->time_base), fps);
-            
             sampleBufferRef = [self convertCVImageBufferRefToCMSampleBufferRef:(CVPixelBufferRef)pixelBuffer
                                                                        withPresentationTimeStamp:presentationTimeStamp];
             if (sampleBufferRef) 
             {
+                NSLogDebug(@"🤖 解析出帧画面[%.3f] cost: %.3lf ms", CMTimeGetSeconds(presentationTimeStamp), (end - begin) * 1000);
                 if ([self.delegate respondsToSelector:@selector(getDecodeVideoDataByFFmpeg:)]) {
                     [self.delegate getDecodeVideoDataByFFmpeg:sampleBufferRef];
                 }
@@ -277,6 +302,7 @@ static enum AVPixelFormat hw_pix_fmt = AV_PIX_FMT_VIDEOTOOLBOX;
             }
             if (sampleBufferRef) 
             {
+                NSLogDebug(@"🤖 解析出帧画面[%.3f] cost: %.3lf ms", CMTimeGetSeconds(presentationTimeStamp), (end - begin) * 1000);
                 if ([self.delegate respondsToSelector:@selector(getDecodeVideoDataByFFmpeg:)]) {
                     [self.delegate getDecodeVideoDataByFFmpeg:sampleBufferRef];
                 }
