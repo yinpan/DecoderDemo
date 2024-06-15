@@ -210,7 +210,7 @@
             CFAbsoluteTime begin = CFAbsoluteTimeGetCurrent();
             int size = av_read_frame(self.formatContext, &packet);
             CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
-            NSLogDebug(@"🤖 av_read_frame cost: %.3lf ms", (end - begin) * 1000);
+            NSLogDebug(@"🦁🤖 av_read_frame cost: %.3lf ms", (end - begin) * 1000);
             if (size < 0 || packet.size < 0)
             {
                 BLParseVideoDataInfo *dataPtr = nil;

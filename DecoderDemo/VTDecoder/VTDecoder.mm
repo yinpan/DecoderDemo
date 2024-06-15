@@ -46,6 +46,7 @@ typedef struct {
     int     _lastExtraDataSize;
     
     BOOL _isFirstFrame;
+    dispatch_semaphore_t semaphore;
 }
 
 @property (nonatomic, copy) NSString *fileURI;
@@ -73,6 +74,7 @@ typedef struct {
             .last_decode_pts = 0,
         };
         _isFirstFrame = YES;
+        semaphore = dispatch_semaphore_create(1); // 创建一个初始值为0的信号量
         pthread_mutex_init(&_decoder_lock, NULL);
     }
     return self;
@@ -95,6 +97,9 @@ typedef struct {
 
 #pragma mark - Callback
 static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFrameRefCon, OSStatus status, VTDecodeInfoFlags infoFlags, CVImageBufferRef pixelBuffer, CMTime presentationTimeStamp, CMTime presentationDuration) {
+    
+    CFAbsoluteTime beginTime = CFAbsoluteTimeGetCurrent();
+    
     AVDecodeVideoInfo *sourceRef = (AVDecodeVideoInfo *)sourceFrameRefCon;
     
     if (pixelBuffer == NULL) {
@@ -115,6 +120,10 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
     CMSampleBufferRef samplebuffer = [decoder createSampleBufferFromPixelbuffer:pixelBuffer
                                                                     videoRotate:sourceRef->rotate
                                                                      timingInfo:sampleTime];
+    CFAbsoluteTime endTime = CFAbsoluteTimeGetCurrent();
+    NSLog(@"🟢 输出解码数据后处理 cost: %.f ms", (endTime - beginTime) * 1000);
+    NSLog(@"🟢 退出");
+//    dispatch_semaphore_signal(decoder->semaphore);
     
     if (samplebuffer) {
         if ([decoder.delegate respondsToSelector:@selector(getVideoDecodeDataCallback:isFirstFrame:)]) {
@@ -141,6 +150,10 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
 #pragma mark - Public
 - (void)startDecodeVideoData:(BLParseVideoDataInfo *)videoInfo
 {
+    // 等待信号量
+//    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    NSLog(@"🟢 进入");
+    CFAbsoluteTime beginTime = CFAbsoluteTimeGetCurrent();
     // get extra data
     if (videoInfo->extraData && videoInfo->extraDataSize) {
         uint8_t *extraData = videoInfo->extraData;
@@ -163,15 +176,15 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
     if (!_decoderSession) {
         _decoderSession = [self createDecoderWithVideoInfo:videoInfo
                                               videoDescRef:&_decoderFormatDescription
-                                               videoFormat:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
+                                               videoFormat:kCVPixelFormatType_420YpCbCr8BiPlanarFullRange //目前方法内部未使用该传入的字段，不进行格式转换，可以节约约2ms+的耗时
                                                       lock:_decoder_lock
                                                   callback:VideoDecoderCallback
                                                decoderInfo:_decoderInfo];
     }
     
-    pthread_mutex_lock(&_decoder_lock);
+//    pthread_mutex_lock(&_decoder_lock);
     if (!_decoderSession) {
-        pthread_mutex_unlock(&_decoder_lock);
+//        pthread_mutex_unlock(&_decoder_lock);
         return;
     }
     
@@ -185,12 +198,14 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
     
     _decoderInfo.last_decode_pts = videoInfo->pts;
     
-    pthread_mutex_unlock(&_decoder_lock);
+//    pthread_mutex_unlock(&_decoder_lock);
     
     // start decode
     [self startDecode:videoInfo
               session:_decoderSession
                  lock:_decoder_lock];
+    CFAbsoluteTime endTime = CFAbsoluteTimeGetCurrent();
+    NSLog(@"🟢 单帧解码数据总耗时 cost: %.f ms", (endTime - beginTime) * 1000);
 }
 
 - (void)stopDecoder {
@@ -201,7 +216,7 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
 
 #pragma mark Create / Destory decoder
 - (VTDecompressionSessionRef)createDecoderWithVideoInfo:(BLParseVideoDataInfo *)videoInfo videoDescRef:(CMVideoFormatDescriptionRef *)videoDescRef videoFormat:(OSType)videoFormat lock:(pthread_mutex_t)lock callback:(VTDecompressionOutputCallback)callback decoderInfo:(DecoderInfo)decoderInfo {
-    pthread_mutex_lock(&lock);
+//    pthread_mutex_lock(&lock);
     
     OSStatus status;
     if (videoInfo->videoFormat == BLVideoEncodeFormatH264) {
@@ -251,7 +266,7 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
     
     if (status != noErr) {
         NSLogError(@"NALU header error !");
-        pthread_mutex_unlock(&lock);
+//        pthread_mutex_unlock(&lock);
         [self destoryDecoder];
         return NULL;
     }
@@ -285,12 +300,12 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
     status = VTDecompressionSessionCreate(kCFAllocatorDefault,
                                           *videoDescRef,
                                           NULL,
-                                          attrs,
+                                          NULL, // attrs,
                                           &callBackRecord,
                                           &session);
     
     CFRelease(attrs);
-    pthread_mutex_unlock(&lock);
+//    pthread_mutex_unlock(&lock);
     if (status != noErr) {
         NSLogError(@"Create decoder failed");
         [self destoryDecoder];
@@ -487,7 +502,7 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
 
 #pragma mark Decode
 - (void)startDecode:(BLParseVideoDataInfo *)videoInfo session:(VTDecompressionSessionRef)session lock:(pthread_mutex_t)lock {
-    pthread_mutex_lock(&lock);
+//    pthread_mutex_lock(&lock);
     uint8_t *data  = videoInfo->data;
     int     size   = videoInfo->dataSize;
     int     rotate = videoInfo->videoRotate;
@@ -528,7 +543,9 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
                                            &sampleBuffer);
         
         if (status == kCMBlockBufferNoErr && sampleBuffer) {
-            VTDecodeFrameFlags flags   = kVTDecodeFrame_EnableAsynchronousDecompression;
+            // 这里不设置为异步解码回调，即不设置kVTDecodeFrame_EnableAsynchronousDecompression
+            
+            VTDecodeFrameFlags flags   = 0; //kVTDecodeFrame_EnableAsynchronousDecompression;
             VTDecodeInfoFlags  flagOut = 0;
             OSStatus decodeStatus      = VTDecompressionSessionDecodeFrame(session,
                                                                            sampleBuffer,
@@ -536,7 +553,7 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
                                                                            sourceRef,
                                                                            &flagOut);
             if(decodeStatus == kVTInvalidSessionErr) {
-                pthread_mutex_unlock(&lock);
+//                pthread_mutex_unlock(&lock);
                 [self destoryDecoder];
                 if (blockBuffer)
                     CFRelease(blockBuffer);
@@ -555,7 +572,7 @@ static void VideoDecoderCallback(void *decompressionOutputRefCon, void *sourceFr
     
     free(tempData);
     tempData = NULL;
-    pthread_mutex_unlock(&lock);
+//    pthread_mutex_unlock(&lock);
 }
 
 #pragma mark - Other

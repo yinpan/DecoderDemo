@@ -88,7 +88,7 @@ extension MediaMetaCache {
         }
         
         let url = URL(fileURLWithPath: uri)
-        let expectOutputSize = CGSize(width: 1920, height: 1080)
+        let expectOutputSize = CGSize(width: 1920, height: 1920)
         if isVideo {
             let asset = AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
             _ = asset.syncLoadTracks()
