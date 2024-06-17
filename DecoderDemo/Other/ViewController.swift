@@ -75,11 +75,12 @@ class ViewController: UIViewController {
         let fileName = if isH264 {
 //            "number_h264.MP4"
 //            "testh264.MP4"
-            "sample_1920x1080_h264.mp4"
+//            "sample_1920x1080_h264.mp4"
 //            "sample_cartoon_h264.mp4"
+            "sample_1280x720_李子柒.mp4"
         } else {
-            "sample_cartoon_h265.mp4"
-//            "sample_1920x1080_h265.mp4"
+//            "sample_cartoon_h265.mp4"
+            "sample_1920x1080_h265.mp4"
         }
         return Bundle.main.path(forResource: fileName, ofType: nil)
     }
@@ -92,6 +93,8 @@ class ViewController: UIViewController {
             }
             var beginTime = CFAbsoluteTimeGetCurrent()
             self.bl_decoder = VideoDecoder(uri: filePath, key: filePath)
+            // 实例解码器
+            self.bl_decoder?.createNewReader(0)
             let end = CFAbsoluteTimeGetCurrent()
             print("🦁 [\(self.decoderType)] 创建解码器耗时 cost: \((end - beginTime) * 1000) ms")
             DispatchQueue.global(qos: .userInteractive).async {
