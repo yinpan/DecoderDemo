@@ -24,7 +24,7 @@ class VideoDecoder {
     private var outputSetting: [String: Any] = [:]
         
     /// 前一次decode成功的时间戳
-    private var latestDecodeTime: Double = -1
+    private var latestDecodeTime: Double = 0
     
     /// 当前需要decode的时间戳
     private var currentDecodeTime: Double = -1
