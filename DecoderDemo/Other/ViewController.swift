@@ -73,11 +73,13 @@ class ViewController: UIViewController {
     private func getVideoPath() -> String? {
         let isH264 = formatSegmentControl.selectedSegmentIndex == 0
         let fileName = if isH264 {
-//            "number_h264.MP4"
+            "number_h264.MP4"
 //            "testh264.MP4"
 //            "sample_1920x1080_h264.mp4"
 //            "sample_cartoon_h264.mp4"
-            "sample_1280x720_李子柒.mp4"
+//            "sample_1280x720_李子柒.mp4"
+//            "number_h264_no_b.MP4"
+//            "ReplaceVideoMaterial.mov"
         } else {
 //            "sample_cartoon_h265.mp4"
             "sample_1920x1080_h265.mp4"
@@ -144,7 +146,12 @@ class ViewController: UIViewController {
         func decompressFrame(data: UnsafeMutablePointer<BLParseVideoDataInfo>) {
             guard let self = weakSelf else { return }
             let pts = data.pointee.timingInfo.presentationTimeStamp
-            print("📺 [解析帧] PTS: \(pts.value)/\(pts.timescale), 时间：\(self.formatTime(time: pts.seconds))")
+            let ptsTime = self.formatTime(time: pts.seconds)
+            
+            let dts = data.pointee.timingInfo.decodeTimeStamp
+            let dtsTime = self.formatTime(time: dts.seconds)
+            
+            print("🤖💼 解析数据包[\(ptsTime)]。dts：\(data.pointee.packet.pointee.dts), pts: \(data.pointee.packet.pointee.pts) pos: \(data.pointee.packet.pointee.pos), size: \(data.pointee.packet.pointee.size), end: \(data.pointee.packet.pointee.pos + Int64(data.pointee.packet.pointee.size))")
             let interval: TimeInterval = 1.0 / 15.0
             
             switch self.decoderType {
@@ -214,7 +221,7 @@ class ViewController: UIViewController {
 extension ViewController: VideoDecoderDelegate, FFVideoDecoderDelegate {
     
     func getVideoDecodeDataCallback(_ sampleBuffer: CMSampleBuffer, isFirstFrame: Bool) {
-        print("🦁 VTDecode Finish.")
+//        print("🦁 VTDecode Finish.")
         DispatchQueue.main.async {
             self.previewView.display(sampleBuffer: sampleBuffer)
         }

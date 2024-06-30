@@ -210,7 +210,11 @@
             CFAbsoluteTime begin = CFAbsoluteTimeGetCurrent();
             int size = av_read_frame(self.formatContext, &packet);
             CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
-            NSLogDebug(@"🦁🤖 av_read_frame cost: %.3lf ms", (end - begin) * 1000);
+            if (packet.stream_index == self.videoStreamIndex)
+            {
+                NSLogDebug(@"🦁🤖 av_read_frame index: %d, cost: %.3lf ms", packet.stream_index, (end - begin) * 1000);
+            }
+            
             if (size < 0 || packet.size < 0)
             {
                 BLParseVideoDataInfo *dataPtr = nil;

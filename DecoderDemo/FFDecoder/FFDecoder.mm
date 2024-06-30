@@ -219,7 +219,18 @@ static enum AVPixelFormat hw_pix_fmt = AV_PIX_FMT_VIDEOTOOLBOX;
     
     // Create CMVideoFormatDescription
     CFAbsoluteTime begin = CFAbsoluteTimeGetCurrent();
-    avcodec_send_packet(codecCtx, &packet);
+    int ret = avcodec_send_packet(codecCtx, &packet);
+    if (ret < 0) {
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
+        {
+            // 需要更多数据，或者解码器已经完成解码
+            NSLogDebug(@"🤖 avcodec_send_packet 需要更多数据: ret = %d", ret);
+        } else {
+            NSLogDebug(@"🤖 avcodec_send_packet 其他情况: ret = %d", ret);
+        }
+        return;
+    }
+    
     while (true)
     {
         int ret = avcodec_receive_frame(codecCtx, videoFrame);
@@ -229,7 +240,7 @@ static enum AVPixelFormat hw_pix_fmt = AV_PIX_FMT_VIDEOTOOLBOX;
             if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
             {
                 // 需要更多数据，或者解码器已经完成解码
-                NSLogDebug(@"🤖 需要更多数据，或者解码器已经完成解码");
+                NSLogDebug(@"🤖 需要更多数据，或者解码器已经完成解码: ret = %d", ret);
                 break;
             } else if (ret < 0) {
                 NSLogError(@"Error during decoding: ret = %d", ret);
@@ -275,13 +286,15 @@ static enum AVPixelFormat hw_pix_fmt = AV_PIX_FMT_VIDEOTOOLBOX;
             NSLogDebug(@"Unknown pixel format: %d\n", pix_fmt);
         }
         CMTime presentationTimeStamp = CMTimeMake(videoFrame->pts, videoStream->time_base.den);
+        NSLog(@"🤖 🖥 解码画面[%.3f]。key_frame：%d, type: %d, dts: %d, pts: %d(%d), coded_picture_number: %d, display_picture_number: %d", CMTimeGetSeconds(presentationTimeStamp), videoFrame->key_frame, videoFrame->pict_type, videoFrame->pkt_dts, videoFrame->pts, videoFrame->pkt_pts, videoFrame->coded_picture_number, videoFrame->display_picture_number);
+        
         CMSampleBufferRef sampleBufferRef = NULL;
         if (pix_fmt == AV_PIX_FMT_VIDEOTOOLBOX)
         {
             CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)videoFrame->data[3];
             
-            int64_t originPTS = videoFrame->pts;
-            int64_t newPTS    = originPTS - baseTime;
+//            int64_t originPTS = videoFrame->pts;
+//            int64_t newPTS    = originPTS - baseTime;
             sampleBufferRef = [self convertCVImageBufferRefToCMSampleBufferRef:(CVPixelBufferRef)pixelBuffer
                                                                        withPresentationTimeStamp:presentationTimeStamp];
             if (sampleBufferRef) 
@@ -313,6 +326,7 @@ static enum AVPixelFormat hw_pix_fmt = AV_PIX_FMT_VIDEOTOOLBOX;
                 CFRelease(pixelBuffer);
             }
         }
+        break;
     }
     if (videoInfo) 
     {
