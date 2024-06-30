@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 enum DecoderType: Int, CustomStringConvertible {
     
@@ -34,6 +35,8 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var formatSegmentControl: UISegmentedControl!
     
+    @IBOutlet weak var countLabel: UILabel!
+    
     private var decoderType: DecoderType = .VideoToolBox
     
     private var encodeFormat: BLVideoEncodeFormat = .H264
@@ -46,8 +49,19 @@ class ViewController: UIViewController {
     
     private var bl_decoder: VideoDecoder?
     
+    @Published private var decoders: [AnyObject] = []
+    
+    private var canceles: Set<AnyCancellable> = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        $decoders
+            .sink { [weak self] decoders in
+                self?.countLabel.text = "共：\(decoders.count)"
+            }
+            .store(in: &canceles)
+        
     }
     @IBAction func encodeFormatDidChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
@@ -147,10 +161,6 @@ class ViewController: UIViewController {
             guard let self = weakSelf else { return }
             let pts = data.pointee.timingInfo.presentationTimeStamp
             let ptsTime = self.formatTime(time: pts.seconds)
-            
-            let dts = data.pointee.timingInfo.decodeTimeStamp
-            let dtsTime = self.formatTime(time: dts.seconds)
-            
             print("🤖💼 解析数据包[\(ptsTime)]。dts：\(data.pointee.packet.pointee.dts), pts: \(data.pointee.packet.pointee.pts) pos: \(data.pointee.packet.pointee.pos), size: \(data.pointee.packet.pointee.size), end: \(data.pointee.packet.pointee.pos + Int64(data.pointee.packet.pointee.size))")
             let interval: TimeInterval = 1.0 / 15.0
             
@@ -236,3 +246,57 @@ extension ViewController: VideoDecoderDelegate, FFVideoDecoderDelegate {
     
 }
 
+// MARK: - TEST
+extension ViewController {
+    
+    @IBAction func addDecoderButtonClicked(_ sender: UIButton) {
+        
+        if decoderType == .AVFoundation {
+            addAVFoundationDecoder()
+        } else {
+            addFFmpegDecoder()
+        }
+    }
+    
+    private func addAVFoundationDecoder() {
+        guard let filePath = getVideoPath() else { return }
+        var beginTime = CFAbsoluteTimeGetCurrent()
+        let decoder = VideoDecoder(uri: filePath, key: filePath)
+        // 实例解码器
+        decoder.createNewReader(0)
+        let end = CFAbsoluteTimeGetCurrent()
+        print("🦁 [\(self.decoderType)] 创建解码器耗时 cost: \((end - beginTime) * 1000) ms")
+        self.decoders.append(decoder)
+    }
+    
+    private func addFFmpegDecoder() {
+        
+        func prepareDecoder(filePath: String, format: AVFormatReader?) -> FFDecoder? {
+            guard let format, let formatContext = format.formatContext else {
+                return nil
+            }
+            return FFDecoder(formatContext: formatContext, decodeType: .hardware, videoStreamIndex: format.videoStreamIndex)
+        }
+        
+        guard let filePath = getVideoPath() else { return }
+        
+        let beginTime = CFAbsoluteTimeGetCurrent()
+        let formatReader = AVFormatReader(path: filePath)
+        
+        var end = CFAbsoluteTimeGetCurrent()
+        print("🦁 [\(self.decoderType)] 环节 - 创建Reader - 读取轨道信息 cost: \((end - beginTime) * 1000) ms")
+        let beginTime1 = CFAbsoluteTimeGetCurrent()
+        guard let decoder = prepareDecoder(filePath: filePath, format: formatReader) else {
+            return
+        }
+        end = CFAbsoluteTimeGetCurrent()
+        print("🦁 [\(self.decoderType)] 环节 - 创建解码器 cost: \((end - beginTime1) * 1000) ms")
+        print("🦁 [\(self.decoderType)] 创建解码器总耗时 cost: \((end - beginTime) * 1000) ms")
+        self.decoders.append(decoder)
+        formatReader.readPacket { _, _ in
+            
+        }
+    }
+    
+    
+}

@@ -82,6 +82,20 @@
                                     <action selector="decodeTypeDidChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="71l-uo-4k7"/>
                                 </connections>
                             </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kNT-Gp-LsT">
+                                <rect key="frame" x="121.33333333333333" y="718" width="150.33333333333337" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" image="video.badge.plus" catalog="system" title="  新增解码器"/>
+                                <connections>
+                                    <action selector="addDecoderButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WHu-Uw-Ipl"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="共：0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XWi-AY-O4r">
+                                <rect key="frame" x="174" y="689.66666666666663" width="45" height="20.333333333333371"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -93,14 +107,18 @@
                             <constraint firstItem="FWm-MQ-zAb" firstAttribute="top" secondItem="pUB-M0-jK2" secondAttribute="bottom" constant="32" id="AEe-7E-VPf"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="oHe-Wx-DdQ" secondAttribute="trailing" id="CM0-c0-lzG"/>
                             <constraint firstItem="uXh-Vo-th8" firstAttribute="centerY" secondItem="dSb-jN-S5w" secondAttribute="centerY" id="DTe-hn-QyB"/>
+                            <constraint firstItem="kNT-Gp-LsT" firstAttribute="top" secondItem="XWi-AY-O4r" secondAttribute="bottom" constant="8" symbolic="YES" id="Dbl-gb-Wed"/>
                             <constraint firstItem="jOU-GY-XfC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="FQs-l7-jGS"/>
                             <constraint firstItem="pUB-M0-jK2" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="100" id="OP9-ss-EZS"/>
+                            <constraint firstItem="kNT-Gp-LsT" firstAttribute="top" secondItem="dSb-jN-S5w" secondAttribute="bottom" constant="61" id="TMb-72-Kuu"/>
                             <constraint firstItem="mVG-pg-Iiv" firstAttribute="trailing" secondItem="oHe-Wx-DdQ" secondAttribute="trailing" id="VlE-Rq-Re5"/>
                             <constraint firstItem="FWm-MQ-zAb" firstAttribute="leading" secondItem="pUB-M0-jK2" secondAttribute="leading" id="dCE-1y-4nx"/>
                             <constraint firstItem="jOU-GY-XfC" firstAttribute="top" secondItem="FWm-MQ-zAb" secondAttribute="bottom" constant="16" id="ffe-2L-wQt"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="jOU-GY-XfC" secondAttribute="trailing" constant="16" id="ivP-0M-Sda"/>
+                            <constraint firstItem="XWi-AY-O4r" firstAttribute="centerX" secondItem="kNT-Gp-LsT" secondAttribute="centerX" id="iy0-0a-6vN"/>
                             <constraint firstItem="mVG-pg-Iiv" firstAttribute="top" secondItem="oHe-Wx-DdQ" secondAttribute="top" id="jzH-KB-w8F"/>
                             <constraint firstItem="oHe-Wx-DdQ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="mYM-IC-Ggg"/>
+                            <constraint firstItem="kNT-Gp-LsT" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="rYh-Yt-TVV"/>
                             <constraint firstItem="dSb-jN-S5w" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" multiplier="0.6" id="sDb-5w-Ynm"/>
                             <constraint firstItem="oSP-c6-dla" firstAttribute="trailing" secondItem="jOU-GY-XfC" secondAttribute="trailing" id="ucK-WU-itD"/>
                             <constraint firstItem="mVG-pg-Iiv" firstAttribute="bottom" secondItem="oHe-Wx-DdQ" secondAttribute="bottom" id="uip-ay-Yqt"/>
@@ -109,6 +127,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="countLabel" destination="XWi-AY-O4r" id="Ojc-Ba-11E"/>
                         <outlet property="formatSegmentControl" destination="oSP-c6-dla" id="qeE-hc-HnP"/>
                         <outlet property="imageView" destination="oHe-Wx-DdQ" id="EF6-VU-1Cn"/>
                         <outlet property="previewView" destination="mVG-pg-Iiv" id="rWt-cS-dTN"/>
@@ -121,6 +140,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="video.badge.plus" catalog="system" width="128" height="93"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
