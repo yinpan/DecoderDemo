@@ -48,6 +48,13 @@
 		B0BE1B062C1063340027C1E8 /* MetalYUVView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BE1B052C1063340027C1E8 /* MetalYUVView.swift */; };
 		B0BE1B082C106A420027C1E8 /* YUVShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = B0BE1B072C106A420027C1E8 /* YUVShader.metal */; };
 		B0BE1B0F2C11744B0027C1E8 /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B0BE1B0E2C11744A0027C1E8 /* libx264.a */; };
+		B0D6AF522C325DC500C6CF25 /* PMFPSTrace.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D6AF4E2C325DC500C6CF25 /* PMFPSTrace.swift */; };
+		B0D6AF532C325DC500C6CF25 /* PMPerfMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D6AF4F2C325DC500C6CF25 /* PMPerfMonitor.swift */; };
+		B0D6AF552C325DC500C6CF25 /* PMAppStat.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D6AF512C325DC500C6CF25 /* PMAppStat.m */; };
+		B0D6AF5A2C325DDA00C6CF25 /* PMPerfData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D6AF572C325DDA00C6CF25 /* PMPerfData.swift */; };
+		B0D6AF672C325F0E00C6CF25 /* GPUUtilization.m in Sources */ = {isa = PBXBuildFile; fileRef = B0D6AF642C325F0E00C6CF25 /* GPUUtilization.m */; };
+		B0D6AF6B2C3278AE00C6CF25 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0D6AF6A2C3278AE00C6CF25 /* IOKit.framework */; };
+		B0D6AF6D2C3279BF00C6CF25 /* PMPerfSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0D6AF6C2C3279BF00C6CF25 /* PMPerfSupport.swift */; };
 		B0DAAE422C0F491500EAE960 /* AVFormatReader.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0DAAE412C0F491500EAE960 /* AVFormatReader.mm */; };
 		B0DAAE442C0F65C200EAE960 /* VTDecoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = B0BE19C32C0EE11C0027C1E8 /* VTDecoder.mm */; };
 /* End PBXBuildFile section */
@@ -215,6 +222,19 @@
 		B0BE1B0B2C11744A0027C1E8 /* x264_config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x264_config.h; sourceTree = "<group>"; };
 		B0BE1B0C2C11744A0027C1E8 /* x264.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x264.h; sourceTree = "<group>"; };
 		B0BE1B0E2C11744A0027C1E8 /* libx264.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libx264.a; sourceTree = "<group>"; };
+		B0D6AF4D2C325DC500C6CF25 /* PMAppStat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PMAppStat.h; sourceTree = "<group>"; };
+		B0D6AF4E2C325DC500C6CF25 /* PMFPSTrace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PMFPSTrace.swift; sourceTree = "<group>"; };
+		B0D6AF4F2C325DC500C6CF25 /* PMPerfMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PMPerfMonitor.swift; sourceTree = "<group>"; };
+		B0D6AF512C325DC500C6CF25 /* PMAppStat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PMAppStat.m; sourceTree = "<group>"; };
+		B0D6AF572C325DDA00C6CF25 /* PMPerfData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PMPerfData.swift; sourceTree = "<group>"; };
+		B0D6AF5E2C325F0E00C6CF25 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		B0D6AF5F2C325F0E00C6CF25 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B0D6AF622C325F0E00C6CF25 /* GPUUtilization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUUtilization.h; sourceTree = "<group>"; };
+		B0D6AF632C325F0E00C6CF25 /* IOKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOKit.h; sourceTree = "<group>"; };
+		B0D6AF642C325F0E00C6CF25 /* GPUUtilization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUUtilization.m; sourceTree = "<group>"; };
+		B0D6AF682C32611D00C6CF25 /* CoreAudioTypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioTypes.framework; path = System/Library/Frameworks/CoreAudioTypes.framework; sourceTree = SDKROOT; };
+		B0D6AF6A2C3278AE00C6CF25 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		B0D6AF6C2C3279BF00C6CF25 /* PMPerfSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PMPerfSupport.swift; sourceTree = "<group>"; };
 		B0DAAE402C0F491500EAE960 /* AVFormatReader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AVFormatReader.h; sourceTree = "<group>"; };
 		B0DAAE412C0F491500EAE960 /* AVFormatReader.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AVFormatReader.mm; sourceTree = "<group>"; };
 		B0DAAE432C0F49CA00EAE960 /* AVFormatModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AVFormatModel.h; sourceTree = "<group>"; };
@@ -236,6 +256,7 @@
 				B06BC0612C312E4C00698300 /* libavfilter.a in Frameworks */,
 				B0BE1AE32C0F01620027C1E8 /* VideoToolbox.framework in Frameworks */,
 				B06BC0622C312E4C00698300 /* libavcodec.a in Frameworks */,
+				B0D6AF6B2C3278AE00C6CF25 /* IOKit.framework in Frameworks */,
 				B0BE1AE92C0F01790027C1E8 /* AVFoundation.framework in Frameworks */,
 				B06BC0642C312E4C00698300 /* libavdevice.a in Frameworks */,
 				B06BC0652C312E4C00698300 /* libswresample.a in Frameworks */,
@@ -249,6 +270,7 @@
 		B037A6AF2C10AE430068B4A0 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				B0D6AF5D2C325F0E00C6CF25 /* GPUUtilization */,
 				B06BBFE02C312E4C00698300 /* FFmpeg-iOS */,
 				B0BE1B092C11744A0027C1E8 /* fat-x264 */,
 			);
@@ -485,6 +507,7 @@
 		B0BE192A2C0EE0C00027C1E8 /* DecoderDemo */ = {
 			isa = PBXGroup;
 			children = (
+				B0D6AF4B2C325D8700C6CF25 /* PMPerfMonitor */,
 				B037A6AF2C10AE430068B4A0 /* Vendor */,
 				B0DAAE3F2C0F490B00EAE960 /* AVFormatReader */,
 				B0BE1ADF2C0EFD5A0027C1E8 /* Support */,
@@ -578,6 +601,8 @@
 		B0BE1AE12C0F01620027C1E8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B0D6AF6A2C3278AE00C6CF25 /* IOKit.framework */,
+				B0D6AF682C32611D00C6CF25 /* CoreAudioTypes.framework */,
 				B0BE1AEC2C0F01B50027C1E8 /* libz.tbd */,
 				B0BE1AEB2C0F01A30027C1E8 /* libiconv.tbd */,
 				B0BE1AEA2C0F01990027C1E8 /* libbz2.tbd */,
@@ -613,6 +638,63 @@
 				B0BE1B0E2C11744A0027C1E8 /* libx264.a */,
 			);
 			path = lib;
+			sourceTree = "<group>";
+		};
+		B0D6AF4B2C325D8700C6CF25 /* PMPerfMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				B0D6AF562C325DDA00C6CF25 /* Model */,
+				B0D6AF4C2C325DC500C6CF25 /* Core */,
+			);
+			path = PMPerfMonitor;
+			sourceTree = "<group>";
+		};
+		B0D6AF4C2C325DC500C6CF25 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				B0D6AF4D2C325DC500C6CF25 /* PMAppStat.h */,
+				B0D6AF4E2C325DC500C6CF25 /* PMFPSTrace.swift */,
+				B0D6AF4F2C325DC500C6CF25 /* PMPerfMonitor.swift */,
+				B0D6AF512C325DC500C6CF25 /* PMAppStat.m */,
+				B0D6AF6C2C3279BF00C6CF25 /* PMPerfSupport.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		B0D6AF562C325DDA00C6CF25 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B0D6AF572C325DDA00C6CF25 /* PMPerfData.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		B0D6AF5D2C325F0E00C6CF25 /* GPUUtilization */ = {
+			isa = PBXGroup;
+			children = (
+				B0D6AF5E2C325F0E00C6CF25 /* LICENSE */,
+				B0D6AF5F2C325F0E00C6CF25 /* README.md */,
+				B0D6AF602C325F0E00C6CF25 /* GPUUtilization */,
+			);
+			path = GPUUtilization;
+			sourceTree = "<group>";
+		};
+		B0D6AF602C325F0E00C6CF25 /* GPUUtilization */ = {
+			isa = PBXGroup;
+			children = (
+				B0D6AF612C325F0E00C6CF25 /* Classes */,
+			);
+			path = GPUUtilization;
+			sourceTree = "<group>";
+		};
+		B0D6AF612C325F0E00C6CF25 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				B0D6AF622C325F0E00C6CF25 /* GPUUtilization.h */,
+				B0D6AF632C325F0E00C6CF25 /* IOKit.h */,
+				B0D6AF642C325F0E00C6CF25 /* GPUUtilization.m */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		B0DAAE3F2C0F490B00EAE960 /* AVFormatReader */ = {
@@ -707,7 +789,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B0D6AF522C325DC500C6CF25 /* PMFPSTrace.swift in Sources */,
 				B0BE19302C0EE0C00027C1E8 /* ViewController.swift in Sources */,
+				B0D6AF6D2C3279BF00C6CF25 /* PMPerfSupport.swift in Sources */,
+				B0D6AF532C325DC500C6CF25 /* PMPerfMonitor.swift in Sources */,
 				B0DAAE442C0F65C200EAE960 /* VTDecoder.mm in Sources */,
 				B037A6AE2C10ADD20068B4A0 /* SafeThread.swift in Sources */,
 				B0BE1B042C1012AA0027C1E8 /* FFDecoder.mm in Sources */,
@@ -715,9 +800,12 @@
 				B0BE192C2C0EE0C00027C1E8 /* AppDelegate.swift in Sources */,
 				B0BE192E2C0EE0C00027C1E8 /* SceneDelegate.swift in Sources */,
 				B0BE1B062C1063340027C1E8 /* MetalYUVView.swift in Sources */,
+				B0D6AF552C325DC500C6CF25 /* PMAppStat.m in Sources */,
+				B0D6AF5A2C325DDA00C6CF25 /* PMPerfData.swift in Sources */,
 				B037A6E92C10AFDC0068B4A0 /* CGFloat+Extension.swift in Sources */,
 				B037A6A62C10ABE50068B4A0 /* VideoDecoder.swift in Sources */,
 				B037A6AA2C10AD750068B4A0 /* BLDecoderDefine.swift in Sources */,
+				B0D6AF672C325F0E00C6CF25 /* GPUUtilization.m in Sources */,
 				B037A6AC2C10ADB50068B4A0 /* MediaMetaCache.swift in Sources */,
 				B0BE1B082C106A420027C1E8 /* YUVShader.metal in Sources */,
 				B037A6E62C10AF8E0068B4A0 /* String+Extension.swift in Sources */,
@@ -896,6 +984,7 @@
 					"$(PROJECT_DIR)/DecoderDemo/Vendor/fat-x264/lib",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pinguo.msgAries;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -938,6 +1027,7 @@
 					"$(PROJECT_DIR)/DecoderDemo/Vendor/fat-x264/lib",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.pinguo.msgAries;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -3,6 +3,7 @@
 //
 
 
+#import <CoreAudio/CoreAudioTypes.h>
 #import <libavutil/log.h>
 #import <libavformat/avformat.h>
 #import <libavutil/frame.h>
@@ -12,3 +13,7 @@
 #import "AVFormatReader.h"
 #import "VTDecoder.h"
 #import "FFDecoder.h"
+
+// 性能监控
+#import "PMAppStat.h"
+#import "GPUUtilization.h"

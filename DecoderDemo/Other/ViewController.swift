@@ -62,6 +62,8 @@ class ViewController: UIViewController {
             }
             .store(in: &canceles)
         
+        PMPerfSupport.shared.startIfNeeded()
+        
     }
     @IBAction func encodeFormatDidChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {

@@ -29,7 +29,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dSb-jN-S5w">
-                                <rect key="frame" x="90" y="622" width="55.666666666666657" height="35"/>
+                                <rect key="frame" x="90" y="552" width="55.666666666666657" height="35"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Play"/>
                                 <connections>
@@ -37,7 +37,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uXh-Vo-th8">
-                                <rect key="frame" x="245" y="622" width="60" height="35"/>
+                                <rect key="frame" x="245" y="552" width="60" height="35"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Stop"/>
                                 <connections>
@@ -45,13 +45,13 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="编码格式：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pUB-M0-jK2">
-                                <rect key="frame" x="16" y="159" width="78.333333333333329" height="21"/>
+                                <rect key="frame" x="16" y="159" width="86.666666666666671" height="21"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                 <color key="textColor" systemColor="systemPurpleColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="解码方式：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FWm-MQ-zAb">
-                                <rect key="frame" x="16" y="212" width="78.333333333333329" height="21"/>
+                                <rect key="frame" x="16" y="212" width="86.666666666666671" height="21"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                 <color key="textColor" systemColor="systemPurpleColor"/>
                                 <nil key="highlightedColor"/>
@@ -83,7 +83,7 @@
                                 </connections>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kNT-Gp-LsT">
-                                <rect key="frame" x="121.33333333333333" y="718" width="150.33333333333337" height="35"/>
+                                <rect key="frame" x="121.33333333333333" y="648" width="150.33333333333337" height="35"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" image="video.badge.plus" catalog="system" title="  新增解码器"/>
                                 <connections>
@@ -91,7 +91,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="共：0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XWi-AY-O4r">
-                                <rect key="frame" x="174" y="689.66666666666663" width="45" height="20.333333333333371"/>
+                                <rect key="frame" x="174" y="619.66666666666663" width="45" height="20.333333333333371"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -123,7 +123,7 @@
                             <constraint firstItem="oSP-c6-dla" firstAttribute="trailing" secondItem="jOU-GY-XfC" secondAttribute="trailing" id="ucK-WU-itD"/>
                             <constraint firstItem="mVG-pg-Iiv" firstAttribute="bottom" secondItem="oHe-Wx-DdQ" secondAttribute="bottom" id="uip-ay-Yqt"/>
                             <constraint firstItem="oSP-c6-dla" firstAttribute="centerY" secondItem="pUB-M0-jK2" secondAttribute="centerY" id="y2P-j6-B2B"/>
-                            <constraint firstItem="dSb-jN-S5w" firstAttribute="top" secondItem="oHe-Wx-DdQ" secondAttribute="bottom" constant="86" id="y5e-pz-Doq"/>
+                            <constraint firstItem="dSb-jN-S5w" firstAttribute="top" secondItem="oHe-Wx-DdQ" secondAttribute="bottom" constant="16" id="y5e-pz-Doq"/>
                         </constraints>
                     </view>
                     <connections>
@@ -145,10 +145,10 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemGreenColor">
-            <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemPurpleColor">
-            <color red="0.68627450980000004" green="0.32156862749999998" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.68627450980392157" green="0.32156862745098042" blue="0.87058823529411766" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
